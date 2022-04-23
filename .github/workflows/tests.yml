@@ -1,0 +1,90 @@
+name: tests
+on:
+  push:
+  #pull_request:
+  #  branches: [ master, main ]
+  #  paths:
+  #  - '*.md'
+  #  - '*.adoc'
+  #  - '*.js*'
+  workflow_dispatch:
+    inputs:
+      trigger:
+        description: Type m to triggre manual jobs
+        required: false
+        default: ''
+env:
+  NODE_VERSION: 17.7.2
+jobs:
+  updates:
+    name: updates
+    #See reference: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#functions
+    #manual job definition:
+    if: startsWith(github.event.inputs.trigger, 'm')
+      || startsWith(github.event.inputs.trigger, 'M')
+    strategy:
+      matrix:
+        java: [11]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v2
+        with:
+          # 'temurin' 'zulu' 'adopt' 'adopt-hotspot' 'adopt-openj9' 'liberica' 'microsoft'
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2
+            ~/.npm
+            ~/.docker
+            ~/.gradle
+          key: ${{ runner.os }}-build-${{ hashFiles('**/pom.xml') }}
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw versions:display-property-updates
+  test-with-docker:
+    name: run in docker java-${{ matrix.java }}
+    #See reference: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#functions
+    #automatic job definition:
+    if: github.event.inputs.trigger == ''
+      || !startsWith(github.event.inputs.trigger, 'm')
+      || !startsWith(github.event.inputs.trigger, 'M')
+    strategy:
+      matrix:
+        java: [11]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2
+            ~/.npm
+            ~/.docker
+            ~/.gradle
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*gradle*', '**/pom.xml') }}
+      - run: sudo apt install -y httpie docker-compose
+      - run: docker-compose version
+      - run: docker version
+      - run: docker pull mysql:8.0.24
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw
+      - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
+      #- run: >
+      #    n=1 ;
+      #    while [[ $(docker ps -n ${n} -q -f health=healthy -f status=running | wc -l) -lt ${n} ]] ; do
+      #      sleep 1s ;
+      #      echo -ne '.' ;
+      #    done ;
+      #    echo '' ;
+      - run: while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 5 ; echo -n '.' ; done ; sleep 15 ; echo 'MySQL is ready'
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f app spring-boot:start
+      - run: http --ignore-stdin get  :8080
+      - run: http --ignore-stdin post :8080 name=README.md content=Hello
+      #- run: cd $GITHUB_WORKSPACE ; http --ignore-stdin -f post :8080 filename="$(date)-README.md" file@README.md
+      - run: http --ignore-stdin get  :8080
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f app spring-boot:stop
+      - run: docker rm -f -v `docker ps -aq`

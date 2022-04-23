@@ -1,0 +1,20 @@
+version: "3.4"
+networks:
+  localnet:
+services:
+  mysql:
+    image: mysql:8.0.24
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports: ["3306:3306"]
+    networks: [localnet]
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "$$MYSQL_USER", "--password=$$MYSQL_PASSWORD"]
+      start_period: 1s
+      interval: 1s
+      timeout: 5s
+      retries: 1111
