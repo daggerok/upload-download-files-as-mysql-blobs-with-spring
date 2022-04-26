@@ -8,12 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class App
+class ContentAsStringApp
 
 fun main(args: Array<String>) {
-    runApplication<App>(*args) {
+    runApplication<ContentAsStringApp>(*args) {
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)))
         Locale.setDefault(Locale.US)
     }
 }
-

@@ -9,7 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modules>
-        <module>app</module>
+        <module>apps/app-0-content-as-byte-array</module>
+        <module>apps/app-1-content-as-string</module>
+        <module>apps/app</module>
     </modules>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
@@ -120,7 +122,7 @@
                     <version>${spring-boot.version}</version>
                 </plugin>
                 <!--
-                    ./mvnw -f app clean compile \
+                    ./mvnw -f apps/app clean compile \
                                -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database' \
                                -Dliquibase.username=user \
                                -Dliquibase.password=password \
