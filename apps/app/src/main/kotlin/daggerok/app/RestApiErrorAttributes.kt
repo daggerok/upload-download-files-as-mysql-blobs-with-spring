@@ -20,6 +20,7 @@ class RestApiErrorAttributes : DefaultErrorAttributes() {
             val api = mapOf(
                 "Get all report file items => GET" to baseUrl,
                 "Create report file item => POST" to baseUrl,
+                "Upload file => POST" to "$baseUrl/upload",
             )
             put("api", api)
         }
