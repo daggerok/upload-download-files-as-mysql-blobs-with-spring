@@ -125,8 +125,10 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 ./mvnw -f apps/app compile spring-boot:start
 
 content=`cat README.md`
-http :8080 name=README.md content=$content
-http :8080
+http -f post :8080/upload file@README.md
+http -f post :8080/upload file@$PWD/README.md
+http -f post :8080/upload file@`pwd`/README.md
+http     get :8080
 
 ./mvnw -f apps/app spring-boot:stop
 docker rm -f -v `docker ps -aq`

@@ -28,23 +28,14 @@ data class ReportItem(
     @Column(nullable = false, updatable = true)
     val name: String = "",
 
-    @Lob // Use columnDefinition if you want string
-    @Column(nullable = false, updatable = true, columnDefinition="LONGBLOB NOT NULL")
-    val content: String = "",
+    @Lob
+    @Suppress("ArrayInDataClass")
+    @Column(nullable = false, updatable = true)
+    val content: ByteArray = ByteArray(0),
 
-    // @Lob // No needs to use columnDefinition with bytes
-    // @Suppress("ArrayInDataClass")
-    // @Column(nullable = false, updatable = true)
-    // val content: ByteArray = ByteArray(0),
-
-    // @CreatedDate
     @UpdateTimestamp
     @LastModifiedDate
-    // @CreationTimestamp
     @DateTimeFormat(iso = DATE_TIME)
     @Column(nullable = false, updatable = true)
-    // @DateTimeFormat(iso = DATE_TIME, style = "SSSXXX")
-    // @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    // @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    val createdAt: Instant? = null, // Instant.now(),
+    val createdAt: Instant? = null,
 )

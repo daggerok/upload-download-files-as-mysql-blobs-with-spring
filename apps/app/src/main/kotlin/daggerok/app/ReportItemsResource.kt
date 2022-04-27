@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RestController
 data class ReportItemsResource(private val reportItems: ReportItems) {
 
     @GetMapping
-    fun getAll(): MutableList<ReportItem> =
+    fun getAll(): MutableList<ReportItemDTO> =
         reportItems.findAll()
+            .map { it.toDTO() }
+            .toMutableList()
 
     @PostMapping
-    fun post(@RequestBody reportItem: ReportItem) =
-        reportItems.save(reportItem)
+    fun post(@RequestBody reportItem: ReportItemDTO) =
+        reportItems.save(reportItem.toEntity())
+            .toDTO()
 }

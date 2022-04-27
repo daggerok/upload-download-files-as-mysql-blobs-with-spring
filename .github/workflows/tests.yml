@@ -189,8 +189,9 @@ jobs:
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
       - run: while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 5 ; echo -n '.' ; done ; sleep 15 ; echo 'MySQL is ready'
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app spring-boot:start
-      - run: http --ignore-stdin get  :8080
-      - run: http --ignore-stdin post :8080 name=README.md content=Hello
-      - run: http --ignore-stdin get  :8080
+      - run: http --ignore-stdin    get  :8080
+      - run: http --ignore-stdin -f post :8080/upload file@$GITHUB_WORKSPACE/pom.xml
+      - run: http --ignore-stdin -f post :8080/upload file@$GITHUB_WORKSPACE/README.md
+      - run: http --ignore-stdin    get  :8080
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app spring-boot:stop
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down

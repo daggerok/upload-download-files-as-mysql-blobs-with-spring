@@ -18,8 +18,8 @@ class RestApiErrorAttributes : DefaultErrorAttributes() {
         super.getErrorAttributes(webRequest, options).apply {
             val baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString()
             val api = mapOf(
-                "Get report all items => GET" to baseUrl,
-                "Create report item => POST" to baseUrl,
+                "Get all report file items => GET" to baseUrl,
+                "Create report file item => POST" to baseUrl,
             )
             put("api", api)
         }
