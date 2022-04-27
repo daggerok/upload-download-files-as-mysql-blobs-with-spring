@@ -107,6 +107,33 @@ http :8001
 docker rm -f -v `docker ps -aq`
 ```
 
+## app-2-upload-file
+
+### test and build
+
+```bash
+./mvnw
+```
+
+### run and verify
+
+```bash
+if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
+while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
+
+./mvnw -f apps/app-2-upload-file compile spring-boot:start
+
+content=`cat README.md`
+http -f post :8002/upload file@README.md
+http -f post :8002/upload file@$PWD/README.md
+http -f post :8002/upload file@`pwd`/README.md
+http     get :8002
+
+./mvnw -f apps/app-2-upload-file spring-boot:stop
+docker rm -f -v `docker ps -aq`
+```
+
 ## app
 
 ### test and build
@@ -125,8 +152,10 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 ./mvnw -f apps/app compile spring-boot:start
 
 content=`cat README.md`
-http :8080 name=README.md content=$content
-http :8080
+http -f post :8080/upload file@README.md
+http -f post :8080/upload file@$PWD/README.md
+http -f post :8080/upload file@`pwd`/README.md
+http     get :8080
 
 ./mvnw -f apps/app spring-boot:stop
 docker rm -f -v `docker ps -aq`
