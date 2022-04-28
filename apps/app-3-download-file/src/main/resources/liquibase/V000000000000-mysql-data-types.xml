@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <property name="time.type" dbms="mysql" value="TIME(6)"/>
+    <property name="timestamp.type" dbms="mysql" value="DATETIME(6)"/>
+    <property name="datetime.type" dbms="mysql" value="DATETIME"/>
+    <property name="date.type" dbms="mysql" value="DATE"/>
+    <property name="decimal.type" dbms="mysql" value="DECIMAL(19,8)"/>
+    <property name="double.type" dbms="mysql" value="DOUBLE"/>
+    <property name="boolean.type" dbms="mysql" value="BOOLEAN"/>
+    <property name="blob.type" dbms="mysql" value="LONGBLOB"/>
+    <property name="now" dbms="mysql" value="CURRENT_TIMESTAMP()"/>
+
+</databaseChangeLog>
