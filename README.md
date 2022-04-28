@@ -108,6 +108,7 @@ docker rm -f -v `docker ps -aq`
 ```
 
 ## app-2-upload-file
+This app implements upload functionality
 
 ### test and build
 
@@ -135,6 +136,7 @@ docker rm -f -v `docker ps -aq`
 ```
 
 ## app-3-download-file
+This app implements download functionality
 
 ### test and build
 
