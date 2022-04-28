@@ -18,3 +18,5 @@ fun ReportItem.toDTO(): ReportItemDTO =
     ReportItemDTO(id, jobId, name, content = String(bytes = content, Charsets.UTF_8), createdAt)
 
 class MissingFilenameException : RuntimeException("File name not found")
+
+class MissingFileException : RuntimeException("File not found")

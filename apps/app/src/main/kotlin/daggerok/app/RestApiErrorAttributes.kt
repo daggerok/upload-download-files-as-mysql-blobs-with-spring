@@ -21,6 +21,7 @@ class RestApiErrorAttributes : DefaultErrorAttributes() {
                 "Get all report file items => GET" to baseUrl,
                 "Create report file item => POST" to baseUrl,
                 "Upload file => POST" to "$baseUrl/upload",
+                "Download file => GET" to "$baseUrl/download?id={id}",
             )
             put("api", api)
         }
