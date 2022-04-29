@@ -67,7 +67,7 @@ jobs:
             ~/.docker
             ~/.gradle
           key: ${{ runner.os }}-build-${{ hashFiles('**/pom.xml') }}
-      - run: docker pull --platform linux/x86_64 mysql:8.0.24
+      - run: docker pull --platform linux/x86_64 mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw
   app-0-content-as-byte-array-integration-tests:
     name: app-0-content-as-byte-array integration tests java-${{ matrix.java }}
@@ -94,7 +94,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ hashFiles('**/*gradle*', '**/pom.xml') }}
       - run: sudo apt install -y httpie
       - run: docker version
-      - run: docker pull --platform linux/x86_64 mysql:8.0.24
+      - run: docker pull --platform linux/x86_64 mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-0-content-as-byte-array
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: docker run --rm --name mysql
@@ -104,7 +104,7 @@ jobs:
                         --health-cmd='mysqladmin ping -h 127.0.0.1 -u $MYSQL_USER --password=$MYSQL_PASSWORD || exit 1'
                         --health-start-period=1s --health-retries=1111 --health-interval=1s --health-timeout=5s
                         -p 3306:3306
-                        -d mysql:8.0.24
+                        -d mysql:8.0.29
       - run: while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 5 ; echo -n '.' ; done ; sleep 15 ; echo 'MySQL is ready'
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-0-content-as-byte-array spring-boot:start
       - run: http --ignore-stdin get  :8000
@@ -139,7 +139,7 @@ jobs:
       - run: sudo apt install -y httpie docker-compose
       - run: docker-compose version
       - run: docker version
-      - run: docker pull --platform linux/x86_64 mysql:8.0.24
+      - run: docker pull --platform linux/x86_64 mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-1-content-as-string
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
@@ -183,7 +183,7 @@ jobs:
       - run: sudo apt install -y httpie docker-compose
       - run: docker-compose version
       - run: docker version
-      - run: docker pull mysql:8.0.24
+      - run: docker pull mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-2-upload-file
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
@@ -221,7 +221,7 @@ jobs:
       - run: sudo apt install -y httpie docker-compose
       - run: docker-compose version
       - run: docker version
-      - run: docker pull mysql:8.0.24
+      - run: docker pull mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-3-download-file
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
@@ -263,7 +263,7 @@ jobs:
       - run: sudo apt install -y httpie docker-compose
       - run: docker-compose version
       - run: docker version
-      - run: docker pull mysql:8.0.24
+      - run: docker pull mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app-4-binary-files
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
@@ -305,7 +305,7 @@ jobs:
       - run: sudo apt install -y httpie docker-compose
       - run: docker-compose version
       - run: docker version
-      - run: docker pull mysql:8.0.24
+      - run: docker pull mysql:8.0.29
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/app
       - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
       - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up

@@ -44,7 +44,7 @@ docker run --rm --name mysql --platform linux/x86_64 \
            -e MYSQL_USER=user -e MYSQL_PASSWORD=password \
            -e MYSQL_DATABASE=database -e MYSQL_ROOT_PASSWORD=password \
            -p 3306:3306 \
-           -d mysql:8.0.24
+           -d mysql:8.0.29
 while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
 docker logs -f mysql &
 
