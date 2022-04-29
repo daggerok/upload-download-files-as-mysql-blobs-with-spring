@@ -193,6 +193,7 @@ docker rm -f -v `docker ps -aq`
 ```
 
 ## RTFM
+* [Upload files with IDEA HTTP requests REST client](https://www.jetbrains.com/help/idea/exploring-http-syntax.html#use-multipart-form-data)
 * [HTTPie files upload / download](https://httpie.io/docs/cli/file-upload-forms)
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.6/maven-plugin/reference/html/)
