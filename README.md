@@ -164,6 +164,34 @@ cd /tmp ; http -f         get :8003/download\?id=1 > README.md ; ls -lah . | gre
 docker rm -f -v `docker ps -aq`
 ```
 
+## app-4-binary-files
+
+### test and build
+
+```bash
+./mvnw
+```
+
+### run and verify
+
+```bash
+if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
+while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
+
+./mvnw -f apps/app-4-binary-files compile spring-boot:start
+
+http --form --multipart --boundary=xoxo post :8004/upload file@README.md
+http -f                                 post :8004/upload file@$PWD/pom.xml
+http                                     get :8004
+
+cd /tmp ; http --download get :8004/download\?id=2 ; ls -lah . | grep pom.xml
+cd /tmp ; http -f         get :8004/download\?id=1 > README.md ; ls -lah . | grep README.md
+
+./mvnw -f apps/app-4-binary-files spring-boot:stop
+docker rm -f -v `docker ps -aq`
+```
+
 ## app
 
 ### test and build
