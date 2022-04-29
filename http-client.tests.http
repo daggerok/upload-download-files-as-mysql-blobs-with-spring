@@ -1,9 +1,9 @@
 ### List all files saved in database:
-GET http://localhost:8080
+GET {{baseUrl}}
 Accept: application/json
 
 ### Upload content from JSON body as a `README.txt` file:
-POST http://localhost:8080
+POST {{baseUrl}}
 Content-Type: application/json
 Accept: application/json
 
@@ -13,7 +13,7 @@ Accept: application/json
 }
 
 ### Upload `README.md` file using IDEA HTTP request REST client:
-POST http://localhost:8080/upload HTTP/1.1
+POST {{baseUrl}}/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -23,7 +23,7 @@ Content-Disposition: form-data; name="file"; filename="README.md"
 < ./README.md
 
 ### Upload `pom.xml` file using IDEA HTTP request REST client:
-POST http://localhost:8080/upload HTTP/1.1
+POST {{baseUrl}}/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary

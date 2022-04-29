@@ -13,6 +13,7 @@
         <module>apps/app-1-content-as-string</module>
         <module>apps/app-2-upload-file</module>
         <module>apps/app-3-download-file</module>
+        <module>apps/app-4-binary-files</module>
         <module>apps/app</module>
     </modules>
     <packaging>pom</packaging>
