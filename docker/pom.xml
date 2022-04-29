@@ -14,7 +14,6 @@
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <docker-compose-project-name>my-app</docker-compose-project-name>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
     </properties>
@@ -26,7 +25,7 @@
                 <version>${exec-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>${project.basedir}</workingDirectory>
-                    <executable>docker-compose</executable>
+                    <executable>docker</executable>
                     <!-- https://github.com/mojohaus/exec-maven-plugin/issues/75 -->
                     <longModulepath>false</longModulepath>
                 </configuration>
@@ -38,10 +37,9 @@
                         </goals>
                         <configuration>
                             <arguments>
+                                <argument>compose</argument>
                                 <argument>-f</argument>
                                 <argument>docker-compose.yaml</argument>
-                                <argument>-p</argument>
-                                <argument>${docker-compose-project-name}</argument>
                                 <argument>up</argument>
                                 <argument>-d</argument>
                                 <argument>--build</argument>
@@ -55,10 +53,9 @@
                         </goals>
                         <configuration>
                             <arguments>
+                                <argument>compose</argument>
                                 <argument>-f</argument>
                                 <argument>docker-compose.yaml</argument>
-                                <argument>-p</argument>
-                                <argument>${docker-compose-project-name}</argument>
                                 <argument>logs</argument>
                                 <argument>-f</argument>
                             </arguments>
@@ -71,10 +68,9 @@
                         </goals>
                         <configuration>
                             <arguments>
+                                <argument>compose</argument>
                                 <argument>-f</argument>
                                 <argument>docker-compose.yaml</argument>
-                                <argument>-p</argument>
-                                <argument>${docker-compose-project-name}</argument>
                                 <argument>down</argument>
                                 <argument>-v</argument>
                                 <argument>--remove-orphans</argument>
