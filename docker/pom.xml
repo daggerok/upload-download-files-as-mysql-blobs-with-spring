@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>daggerok.dev</groupId>
-    <artifactId>spring-mvc-upload-download-files-as-mysql-blobs-docker-compose</artifactId>
+    <artifactId>upload-download-files-as-mysql-blobs-with-spring-docker-compose</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Docker compose environment for local development</description>

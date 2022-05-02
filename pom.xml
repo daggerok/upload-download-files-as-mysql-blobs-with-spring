@@ -19,7 +19,7 @@
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
     <groupId>daggerok</groupId>
-    <artifactId>spring-mvc-upload-download-files-as-mysql-blobs</artifactId>
+    <artifactId>upload-download-files-as-mysql-blobs-with-spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <properties>
         <encoding>UTF-8</encoding>
@@ -123,6 +123,14 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>build-info</goal>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <!--
                     ./mvnw -f apps/app clean compile \

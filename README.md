@@ -1,4 +1,4 @@
-# Upload, download files as mysql blobs with Spring [![tests](https://github.com/daggerok/spring-mvc-upload-download-files-as-mysql-blobs/actions/workflows/tests.yml/badge.svg)](https://github.com/daggerok/spring-mvc-upload-download-files-as-mysql-blobs/actions/workflows/tests.yml)
+# Upload, download files as mysql blobs with Spring [![tests](https://github.com/daggerok/upload-download-files-as-mysql-blobs-with-spring/actions/workflows/tests.yml/badge.svg)](https://github.com/daggerok/upload-download-files-as-mysql-blobs-with-spring/actions/workflows/tests.yml)
 Spring boot app based on Spring MVC, Spring Data JPA, MySQL and Liquibase which can store (download) file content in MySQL database as
 blobs and upload them and their metadata back 
 
@@ -44,7 +44,7 @@ docker run --rm --name mysql --platform linux/x86_64 \
            -e MYSQL_USER=user -e MYSQL_PASSWORD=password \
            -e MYSQL_DATABASE=database -e MYSQL_ROOT_PASSWORD=password \
            -p 3306:3306 \
-           -d mysql:8.0.29
+           -d mysql:8.0.24
 while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
 docker logs -f mysql &
 

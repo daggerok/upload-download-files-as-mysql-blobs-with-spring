@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 abstract class AbstractTestcontainersMySQLTest {
 
     companion object {
-        data class TestMySQLContainer(val image: String = "mysql:8.0.29") : MySQLContainer<TestMySQLContainer>(image)
+        data class TestMySQLContainer(val image: String = "mysql:8.0.24") : MySQLContainer<TestMySQLContainer>(image)
 
         @Container
         val mysqlContainer: TestMySQLContainer = TestMySQLContainer().withDatabaseName("myapp")
