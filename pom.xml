@@ -184,6 +184,27 @@
                         <password>password</password> -->
                     </configuration>
                 </plugin>
+                <!-- fix liquibase for java: 18 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <executions>
+                        <execution>
+                            <id>satisfy-liquibase-on-java-18+</id>
+                            <phase>initialize</phase>
+                            <configuration>
+                                <target>
+                                    <mkdir dir="${project.build.directory}/test-classes" />
+                                    <mkdir dir="${project.build.directory}/classes" />
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
