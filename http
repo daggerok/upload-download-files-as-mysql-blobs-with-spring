@@ -243,9 +243,12 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 
 ./mvnw -f apps/reactive-app compile spring-boot:start
 
-http get :8080
-content=`cat README.md` ; http post :8080 name=README.md content=$content
-http get :8080
+http --form --multipart --boundary=xoxo post :8080/upload file@README.md
+http -f                                 post :8080/upload file@$PWD/pom.xml
+http                                     get :8080
+
+cd /tmp ; http --download get :8080/download\?id=2 ; ls -lah . | grep pom.xml
+cd /tmp ; http -f         get :8080/download\?id=1 > README.md ; ls -lah . | grep README.md
 
 ./mvnw -f apps/reactive-app spring-boot:stop
 docker rm -f -v `docker ps -aq`
