@@ -15,6 +15,7 @@
         <module>apps/app-3-download-file</module>
         <module>apps/app-4-binary-files</module>
         <module>apps/app</module>
+        <module>apps/reactive-app-0-content-as-byte-array</module>
         <module>apps/reactive-app</module>
     </modules>
     <packaging>pom</packaging>
