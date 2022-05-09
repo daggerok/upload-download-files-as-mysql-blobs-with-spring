@@ -220,6 +220,37 @@ cd /tmp ; http -f         get :8080/download\?id=1 > README.md ; ls -lah . | gre
 docker rm -f -v `docker ps -aq`
 ```
 
+## reactive-app-0-content-as-byte-array
+
+### test and build
+
+```bash
+./mvnw
+```
+
+### run and verify
+
+```bash
+if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
+
+while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
+./mvnw -f apps/reactive-app-0-content-as-byte-array clean compile \
+  liquibase:update \
+    -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database' \
+    -Dliquibase.username=user \
+    -Dliquibase.password=password
+
+./mvnw -f apps/reactive-app-0-content-as-byte-array compile spring-boot:start
+
+http get :8000
+content=`cat README.md` ; http post :8000 name=README.md content=$content
+http get :8000
+
+./mvnw -f apps/reactive-app-0-content-as-byte-array spring-boot:stop
+docker rm -f -v `docker ps -aq`
+```
+
 ## reactive-app
 
 ### test and build
