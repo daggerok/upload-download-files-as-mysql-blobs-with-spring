@@ -17,6 +17,7 @@
         <module>apps/app</module>
         <module>apps/reactive-app-0-content-as-byte-array</module>
         <module>apps/reactive-app-1-content-as-string</module>
+        <module>apps/reactive-app-2-upload-file</module>
         <module>apps/reactive-app</module>
     </modules>
     <packaging>pom</packaging>

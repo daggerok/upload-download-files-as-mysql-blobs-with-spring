@@ -282,6 +282,37 @@ http get :8001
 docker rm -f -v `docker ps -aq`
 ```
 
+## reactive-app-2-upload-file
+
+### test and build
+
+```bash
+./mvnw
+```
+
+### run and verify
+
+```bash
+if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
+
+while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
+./mvnw -f apps/reactive-app-2-upload-file clean compile \
+  liquibase:update \
+    -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database' \
+    -Dliquibase.username=user \
+    -Dliquibase.password=password
+
+./mvnw -f apps/reactive-app-2-upload-file compile spring-boot:start
+
+http get :8002
+http --form --multipart --boundary=xoxo post :8002/api/v1/upload file@README.md
+http get :8002
+
+./mvnw -f apps/reactive-app-2-upload-file spring-boot:stop
+docker rm -f -v `docker ps -aq`
+```
+
 ## reactive-app
 
 ### test and build

@@ -114,14 +114,53 @@ jobs:
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:start
       - run: http --ignore-stdin  get :8080
-      #- name: Set output CONTENT variable with README.md file content
-      #  run: echo "::set-output name=CONTENT::$(cat README.md)"
-      #  id: refs_names
-      #  shell: bash
       - run: http --ignore-stdin  get :8080
       - run: http --ignore-stdin -f post :8080/upload file@README.md
       - run: http --ignore-stdin  get :8080
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:stop
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down
+  reactive-app-2-upload-file-integration-tests:
+    name: reactive-app-2-upload-file integration tests java-${{ matrix.java }}
+    if: github.event.inputs.trigger == ''
+      || !startsWith(github.event.inputs.trigger, 'm')
+      || !startsWith(github.event.inputs.trigger, 'M')
+    strategy:
+      matrix:
+        java: [11]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2
+            ~/.npm
+            ~/.docker
+            ~/.gradle
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*gradle*', '**/pom.xml') }}
+      - run: sudo apt install -y httpie
+      - run: docker pull mysql:8.0.24
+      - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+      - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
+      - run: while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 30 ; echo 'MySQL is ready.'
+      - run: ./mvnw -f apps/reactive-app-2-upload-file clean compile liquibase:update
+                    -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database'
+                    -Dliquibase.username=user -Dliquibase.password=password
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-2-upload-file
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-2-upload-file spring-boot:start
+      - run: http --ignore-stdin  get :8002
+      #- name: Set output CONTENT variable with README.md file content
+      #  run: echo "::set-output name=CONTENT::$(cat README.md)"
+      #  id: refs_names
+      #  shell: bash
+      - run: http --ignore-stdin  get :8002
+      - run: http --ignore-stdin -f post :8002/upload file@README.md
+      - run: http --ignore-stdin  get :8002
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-2-upload-file spring-boot:stop
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down
   reactive-app-1-content-as-string-integration-tests:
     name: reactive-app-1-content-as-string integration tests java-${{ matrix.java }}
