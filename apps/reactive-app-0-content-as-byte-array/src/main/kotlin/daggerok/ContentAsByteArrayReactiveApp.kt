@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ReactiveApp
+class ContentAsByteArrayReactiveApp
 
 fun main(args: Array<String>) {
-    runApplication<ReactiveApp>(*args) {
+    runApplication<ContentAsByteArrayReactiveApp>(*args) {
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.from(ZoneOffset.UTC)))
         Locale.setDefault(Locale.US)
     }

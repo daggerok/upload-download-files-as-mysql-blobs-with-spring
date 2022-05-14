@@ -28,10 +28,14 @@ data class ReportItem(
     @Column(nullable = false, updatable = true)
     val name: String = "",
 
-    @Lob // Use columnDefinition if you want to serialize mysql blob as kotlin string
-    @Column(nullable = false, updatable = true, columnDefinition="LONGBLOB NOT NULL")
+    @Lob
+    @Column(nullable = false, updatable = true)
     val content: String = "",
 
+    // @Lob // Use columnDefinition if you want to serialize mysql blob as kotlin string
+    // @Column(nullable = false, updatable = true, columnDefinition="LONGBLOB NOT NULL")
+    // val content: String = "",
+    //
     // @Lob // No needs to use columnDefinition with bytes
     // @Suppress("ArrayInDataClass")
     // @Column(nullable = false, updatable = true)

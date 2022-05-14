@@ -99,8 +99,8 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 
 ./mvnw -f apps/app-1-content-as-string compile spring-boot:start
 
-content=`cat README.md`
-http :8001 name=README.md content=$content
+http :8001
+content=`cat README.md` ; http :8001 name=README.md content=$content
 http :8001
 
 ./mvnw -f apps/app-1-content-as-string spring-boot:stop
@@ -248,6 +248,37 @@ content=`cat README.md` ; http post :8000 name=README.md content=$content
 http get :8000
 
 ./mvnw -f apps/reactive-app-0-content-as-byte-array spring-boot:stop
+docker rm -f -v `docker ps -aq`
+```
+
+## reactive-app-1-content-as-string
+
+### test and build
+
+```bash
+./mvnw
+```
+
+### run and verify
+
+```bash
+if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
+
+while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
+./mvnw -f apps/reactive-app-0-content-as-string clean compile \
+  liquibase:update \
+    -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database' \
+    -Dliquibase.username=user \
+    -Dliquibase.password=password
+
+./mvnw -f apps/reactive-app-0-content-as-string compile spring-boot:start
+
+http get :8001
+content=`cat README.md` ; http post :8001 name=README.md content=$content
+http get :8001
+
+./mvnw -f apps/reactive-app-0-content-as-string spring-boot:stop
 docker rm -f -v `docker ps -aq`
 ```
 

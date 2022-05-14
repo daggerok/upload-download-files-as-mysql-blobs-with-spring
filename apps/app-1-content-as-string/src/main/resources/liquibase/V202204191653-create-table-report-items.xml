@@ -17,9 +17,8 @@
             </column>
 
             <column name="name" type="VARCHAR(255)" defaultValue=""/>
-            <column name="content" type="${blob.type}"/>
+            <column name="content" type="${text.type}"/>
             <column name="created_at" type="${timestamp.type}"/>
-            <!--<column name="created_at" type="${datetime.type}"/>-->
         </createTable>
 
         <rollback>
