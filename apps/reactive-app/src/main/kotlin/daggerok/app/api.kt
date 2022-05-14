@@ -19,10 +19,12 @@ data class ReportItemDocument(
     val lastModifiedAt: Instant? = null,
 )
 
-fun ReportItemDTO.toEntity(): ReportItem =
-    ReportItem(id, jobId, name, content.toByteArray(charset = Charsets.UTF_8), lastModifiedAt)
-
 fun ReportItem.toDocument(): ReportItemDocument =
     ReportItemDocument(id, jobId, name, content = String(bytes = content, Charsets.UTF_8), lastModifiedAt)
+
+data class UploadFileDocument(
+    @JsonIgnore val filename: String = "",
+    val message: String = "file $filename was saved",
+)
 
 class MissingFileException : RuntimeException("File not found")

@@ -114,11 +114,12 @@ jobs:
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:start
       - run: http --ignore-stdin  get :8080
-      - name: Set output CONTENT variable with README.md file content
-        run: echo "::set-output name=CONTENT::$(cat README.md)"
-        id: refs_names
-        shell: bash
-      - run: http --ignore-stdin post :8080 name=README.md content="${{ steps.refs_names.outputs.CONTENT }}"
+      #- name: Set output CONTENT variable with README.md file content
+      #  run: echo "::set-output name=CONTENT::$(cat README.md)"
+      #  id: refs_names
+      #  shell: bash
+      - run: http --ignore-stdin  get :8080
+      - run: http --ignore-stdin -f post :8080/upload file@README.md
       - run: http --ignore-stdin  get :8080
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:stop
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down

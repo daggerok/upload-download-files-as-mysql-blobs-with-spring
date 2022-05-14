@@ -266,19 +266,19 @@ if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
 ./mvnw -f docker -P down ; ./mvnw -f docker -P up ; ./mvnw -f docker -P logs &
 
 while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 15; echo 'MySQL is ready.'
-./mvnw -f apps/reactive-app-0-content-as-string clean compile \
+./mvnw -f apps/reactive-app-1-content-as-string clean compile \
   liquibase:update \
     -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database' \
     -Dliquibase.username=user \
     -Dliquibase.password=password
 
-./mvnw -f apps/reactive-app-0-content-as-string compile spring-boot:start
+./mvnw -f apps/reactive-app-1-content-as-string compile spring-boot:start
 
 http get :8001
 content=`cat README.md` ; http post :8001 name=README.md content=$content
 http get :8001
 
-./mvnw -f apps/reactive-app-0-content-as-string spring-boot:stop
+./mvnw -f apps/reactive-app-1-content-as-string spring-boot:stop
 docker rm -f -v `docker ps -aq`
 ```
 
@@ -306,7 +306,7 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 ./mvnw -f apps/reactive-app compile spring-boot:start
 
 http get :8080
-content=`cat README.md` ; http post :8080 name=README.md content=$content
+http --form --multipart --boundary=xoxo post :8080/api/v1/upload file@README.md
 http get :8080
 
 ./mvnw -f apps/reactive-app spring-boot:stop
