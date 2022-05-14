@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="V202204191653" author="Maksim Kostromin">
+        <comment>Create report_items table</comment>
+
+        <createTable tableName="report_items">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="report_items_pk"/>
+            </column>
+
+            <column name="job_id" type="BIGINT" defaultValue="-1">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(255)" defaultValue=""/>
+            <column name="content" type="${text.type}"/>
+            <column name="last_modified_at" type="${timestamp.type}"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="report_items"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
