@@ -23,8 +23,9 @@ fun ReportItem.toDocument(): ReportItemDocument =
     ReportItemDocument(id, jobId, name, content = String(bytes = content, Charsets.UTF_8), lastModifiedAt)
 
 data class UploadFileDocument(
+    @JsonIgnore val id: Long? = -1,
     @JsonIgnore val filename: String = "",
-    val message: String = "file $filename was saved",
+    val message: String = "File(id=$id, filename=$filename) was saved",
 )
 
 class MissingFileException : RuntimeException("File not found")
