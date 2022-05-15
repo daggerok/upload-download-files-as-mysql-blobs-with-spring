@@ -2,7 +2,7 @@
 Spring boot app based on Spring MVC, Spring Data JPA, MySQL and Liquibase which can store (download) file content in MySQL database as
 blobs and upload them and their metadata back 
 
-## app-0-content-as-byte-array
+### app-0-content-as-byte-array
 This app stores data as a kotlin byte-array, but mysql longblob
 
 ```kotlin
@@ -28,13 +28,13 @@ data class ReportItem(
 )
 ```
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -58,7 +58,7 @@ http :8000
 docker stop mysql
 ```
 
-## app-1-content-as-string
+### app-1-content-as-string
 This app stores data as a kotlin text (string), but mysql longblob
 
 ```kotlin
@@ -84,13 +84,13 @@ data class ReportItem(
 )
 ```
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -107,16 +107,16 @@ http :8001
 docker rm -f -v `docker ps -aq`
 ```
 
-## app-2-upload-file
+### app-2-upload-file
 This app implements upload functionality
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -135,16 +135,16 @@ http     get :8002
 docker rm -f -v `docker ps -aq`
 ```
 
-## app-3-download-file
+### app-3-download-file
 This app implements download functionality
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -164,15 +164,15 @@ cd /tmp ; http -f         get :8003/download\?id=1 > README.md ; ls -lah . | gre
 docker rm -f -v `docker ps -aq`
 ```
 
-## app-4-binary-files
+### app-4-binary-files
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -192,15 +192,15 @@ cd /tmp ; http -f         get :8004/download\?id=1 > README.md ; ls -lah . | gre
 docker rm -f -v `docker ps -aq`
 ```
 
-## app
+### app
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -220,15 +220,15 @@ cd /tmp ; http -f         get :8080/download\?id=1 > README.md ; ls -lah . | gre
 docker rm -f -v `docker ps -aq`
 ```
 
-## reactive-app-0-content-as-byte-array
+### reactive-app-0-content-as-byte-array
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -251,15 +251,15 @@ http get :8000
 docker rm -f -v `docker ps -aq`
 ```
 
-## reactive-app-1-content-as-string
+### reactive-app-1-content-as-string
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -282,15 +282,15 @@ http get :8001
 docker rm -f -v `docker ps -aq`
 ```
 
-## reactive-app-2-upload-file
+### reactive-app-2-upload-file
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -306,22 +306,22 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 ./mvnw -f apps/reactive-app-2-upload-file compile spring-boot:start
 
 http get :8002
-http --form --multipart --boundary=xoxo post :8002/api/v1/upload file@README.md
+http --form --multipart --boundary=xoxo post :8002/upload file@README.md
 http get :8002
 
 ./mvnw -f apps/reactive-app-2-upload-file spring-boot:stop
 docker rm -f -v `docker ps -aq`
 ```
 
-## reactive-app
+### reactive-app
 
-### test and build
+#### test and build
 
 ```bash
 ./mvnw
 ```
 
-### run and verify
+#### run and verify
 
 ```bash
 if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
@@ -337,14 +337,17 @@ while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 
 ./mvnw -f apps/reactive-app compile spring-boot:start
 
 http get :8080
-http --form --multipart --boundary=xoxo post :8080/api/v1/upload file@README.md
-http get :8080
+http --form --multipart --boundary=xoxo post :8080/upload file@README.md
+
+http get :8080 | jq 
+
+mkdir target ; http get :8080/download file@README.md
 
 ./mvnw -f apps/reactive-app spring-boot:stop
 docker rm -f -v `docker ps -aq`
 ```
 
-## RTFM
+### RTFM
 * [Upload files with IDEA HTTP requests REST client](https://www.jetbrains.com/help/idea/exploring-http-syntax.html#use-multipart-form-data)
 * [HTTPie files upload / download](https://httpie.io/docs/cli/file-upload-forms)
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
