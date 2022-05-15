@@ -1,6 +1,5 @@
 package daggerok.app
 
-import java.lang.RuntimeException
 import java.time.Instant
 
 data class ReportItemDTO(

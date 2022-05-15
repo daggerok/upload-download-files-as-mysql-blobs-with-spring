@@ -18,9 +18,8 @@ class RestApiErrorAttributes : DefaultErrorAttributes() {
         super.getErrorAttributes(request, options.including(MESSAGE)).apply {
             val baseUrl = request?.uri()?.let { "${it.scheme}://${it.authority}" } ?: ""
             val api = mapOf(
-                "Get saved upload entities => GET" to baseUrl,
                 "Upload file => POST" to "$baseUrl/upload",
-                // "Download file => POST" to "$baseUrl/download/{filepath}",
+                "List saved upload entities => GET" to baseUrl,
             )
             put("api", api)
         }

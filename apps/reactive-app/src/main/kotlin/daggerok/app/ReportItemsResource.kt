@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @RestController
 @Transactional(readOnly = true)
@@ -36,17 +37,35 @@ data class ReportItemsResource(private val reportItems: ReportItems) {
                     .map(ReportItem::toDocument)
         }
 
+    // @PostMapping("/upload")
+    // @Transactional(readOnly = false)
+    // fun uploadFile(@RequestPart("file") file: FilePart) =
+    //     Mono.from(file.content())
+    //         .map {
+    //             ByteArray(it.readableByteCount()).apply {
+    //                 it.read(this)
+    //                 DataBufferUtils.release(it)
+    //             }
+    //         }
+    //         .map { ReportItem(name = file.filename(), content = it) }
+    //         .flatMap(reportItems::save)
+    //         .map { UploadFileDocument(id = it.id, filename = it.name) }
+
     @PostMapping("/upload")
     @Transactional(readOnly = false)
-    fun uploadFile(@RequestPart("file") file: FilePart) =
-        Mono.from(file.content())
-            .map {
-                ByteArray(it.readableByteCount()).apply {
-                    it.read(this)
-                    DataBufferUtils.release(it)
-                }
+    fun uploadFile(@RequestPart("file") fileStream: Flux<FilePart>) =
+        fileStream.map { it.filename() to it.content() }
+            .flatMap { (filename, contentStream) ->
+                contentStream
+                    .map {
+                        ByteArray(it.readableByteCount()).apply {
+                            it.read(this)
+                            DataBufferUtils.release(it)
+                        }
+                    }
+                    .map { ReportItem(name = filename, content = it) }
+                    .flatMap(reportItems::save)
             }
-            .map { ReportItem(name = file.filename(), content = it) }
-            .flatMap(reportItems::save)
-            .map { UploadFileDocument(filename = it.name) }
+            .map { UploadFileDocument(id = it.id, filename = it.name) }
+            .toMono()
 }
