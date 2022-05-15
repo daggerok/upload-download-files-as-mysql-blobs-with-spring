@@ -114,9 +114,10 @@ jobs:
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:start
       - run: http --ignore-stdin  get :8080
-      - run: http --ignore-stdin  get :8080
       - run: http --ignore-stdin -f post :8080/upload file@README.md
-      - run: http --ignore-stdin  get :8080
+      - run: mkdir -p target ; id=$(http --ignore-stdin get :8080 | jq '.[0].id') ; http get :8080/download/$id > target/index.md
+      - run: ls -lah target/
+      - run: cat target/index.md
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:stop
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down
   reactive-app-2-upload-file-integration-tests:
