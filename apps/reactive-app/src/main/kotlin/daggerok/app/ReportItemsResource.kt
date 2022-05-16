@@ -59,7 +59,7 @@ data class ReportItemsResource(private val reportItems: ReportItems) {
 
     @PostMapping("/upload")
     @Transactional(readOnly = false)
-    fun uploadFile(@RequestPart("file") fileStream: Flux<FilePart>): Mono<UploadFileDocument> =
+    fun uploadFile(@RequestPart("file") fileStream: Flux<FilePart>): Mono<ReportItemDocument> =
         fileStream.map { it.filename() to it.content() }
             .flatMap { (filename, contentStream) ->
                 contentStream
@@ -72,7 +72,7 @@ data class ReportItemsResource(private val reportItems: ReportItems) {
                     .map { ReportItem(name = filename, content = it) }
                     .flatMap(reportItems::save)
             }
-            .map { UploadFileDocument(id = it.id, filename = it.name) }
+            .map { it.toDocument() }
             .toMono()
 
     @GetMapping("/download/{id}") // may be post as well
