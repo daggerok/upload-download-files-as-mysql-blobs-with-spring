@@ -18,6 +18,7 @@
         <module>apps/reactive-app-0-content-as-byte-array</module>
         <module>apps/reactive-app-1-content-as-string</module>
         <module>apps/reactive-app-2-upload-file</module>
+        <module>apps/reactive-app-3-download-file</module>
         <module>apps/reactive-app</module>
     </modules>
     <packaging>pom</packaging>
@@ -37,6 +38,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+        <netty-resolver-dns-native-macos.version>4.1.77.Final</netty-resolver-dns-native-macos.version>
     </properties>
     <dependencies>
         <dependency>
@@ -70,7 +72,7 @@
             <artifactId>netty-resolver-dns-native-macos</artifactId>
             <scope>runtime</scope>
             <classifier>osx-x86_64</classifier>
-            <version>4.1.76.Final</version>
+            <version>${netty-resolver-dns-native-macos.version}</version>
         </dependency>
         <!--  -->
         <dependency>
