@@ -19,6 +19,7 @@
         <module>apps/reactive-app-1-content-as-string</module>
         <module>apps/reactive-app-2-upload-file</module>
         <module>apps/reactive-app-3-download-file</module>
+        <module>apps/reactive-app-4-binary-files</module>
         <module>apps/reactive-app</module>
     </modules>
     <packaging>pom</packaging>

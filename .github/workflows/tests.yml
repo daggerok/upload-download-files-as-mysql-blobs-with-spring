@@ -115,9 +115,54 @@ jobs:
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:start
       - run: http --ignore-stdin  get :8080
       - run: http --ignore-stdin -f post :8080/upload file@README.md
-      - run: mkdir -p target ; id=$(http --ignore-stdin get :8080 | jq '.[0].id') ; http get :8080/download/$id > target/index.md
-      - run: ls -lah target/ ; cat > target/index.md
+      - name: Set output JOB_ID variable
+        run: echo "::set-output name=JOB_ID::$(http --ignore-stdin get :8080 | jq '.[0].id')"
+        id: refs_names
+        shell: bash
+      - run: mkdir -p $GITHUB_WORKSPACE/target ; http get :8080/download/${{ steps.refs_names.outputs.JOB_ID }} > target/index.md
+      - run: mkdir -p $GITHUB_WORKSPACE/target ; id=$(http --ignore-stdin get :8080 | jq '.[0].id') ; http get :8080/download/$id > target/index.md
+      - run: ls -lah $GITHUB_WORKSPACE/target/
+      - run: cat > $GITHUB_WORKSPACE/target/index.md
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app spring-boot:stop
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down
+  reactive-app-4-binary-files-integration-tests:
+    name: reactive-app-4-binary-files integration tests java-${{ matrix.java }}
+    if: github.event.inputs.trigger == ''
+      || !startsWith(github.event.inputs.trigger, 'm')
+      || !startsWith(github.event.inputs.trigger, 'M')
+    strategy:
+      matrix:
+        java: [11]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2
+            ~/.npm
+            ~/.docker
+            ~/.gradle
+          key: ${{ runner.os }}-build-${{ hashFiles('**/*gradle*', '**/pom.xml') }}
+      - run: sudo apt install -y httpie
+      - run: docker pull mysql:8.0.24
+      - run: if [[ "" != `docker ps -aq` ]] ; then docker rm -f -v `docker ps -aq` ; fi
+      - run: ./mvnw -f docker -P down ; ./mvnw -f docker -P up
+      - run: while [[ $(docker ps -n 1 -q -f health=healthy -f status=running | wc -l) -lt 1 ]] ; do sleep 3 ; echo -n '.' ; done ; sleep 30 ; echo 'MySQL is ready.'
+      - run: ./mvnw -f apps/reactive-app-4-binary-files clean compile liquibase:update
+                    -Dliquibase.url='jdbc:mysql://127.0.0.1:3306/database'
+                    -Dliquibase.username=user -Dliquibase.password=password
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-4-binary-files
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-4-binary-files spring-boot:start
+      - run: http --ignore-stdin  get :8004
+      - run: http --ignore-stdin -f post :8004/upload file@README.md
+      - run: mkdir -p target ; id=$(http --ignore-stdin get :8004 | jq '.[0].id') ; http get :8004/download/$id > target/index.md
+      - run: ls -lah target/ ; cat > target/index.md
+      - run: cd $GITHUB_WORKSPACE ; ./mvnw -f apps/reactive-app-4-binary-files spring-boot:stop
       - run: cd $GITHUB_WORKSPACE ; ./mvnw -f docker -P down
   reactive-app-3-download-file-integration-tests:
     name: reactive-app-3-download-file integration tests java-${{ matrix.java }}
