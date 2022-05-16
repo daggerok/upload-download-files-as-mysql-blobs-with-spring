@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import reactor.test.StepVerifier
 
 @SpringBootTest(
-    classes = [ReactiveApp::class],
+    classes = [ContentAsStringReactiveApp::class],
     webEnvironment = RANDOM_PORT,
 )
-class ReactiveAppTests @Autowired constructor(val reportItems: ReportItems) {
+class ContentAsStringReactiveAppTests @Autowired constructor(val reportItems: ReportItems) {
 
     @BeforeEach
     fun setUp() {
